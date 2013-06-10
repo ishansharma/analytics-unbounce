@@ -28,7 +28,7 @@ function unbounce_tracking_code()
 	</script>
 _TRACKING_CODE_;
 
-	if (is_admin())
+	if (!is_admin())
 	{
 		echo $tracking_script;
 	}
