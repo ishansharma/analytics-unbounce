@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Analytics Unbounce
-Pluign URI: http://wpblogexperts.com/plugins
+Plugin URI: http://wpblogexperts.com/plugins
 Description: Adds Google Analytics tracking code to WordPress and fixes bounce rate measurement
 Version: 1.0
 Author: Ishan Sharma
