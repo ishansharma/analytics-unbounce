@@ -32,7 +32,7 @@ function unbounce_tracking_code()
 	</script>
 _TRACKING_CODE_;
 
-	if (!is_admin())
+	if (!current_user_can('edit_published_posts'))
 	{
 		echo $tracking_script;
 	}
