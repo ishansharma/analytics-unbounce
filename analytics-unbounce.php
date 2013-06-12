@@ -9,12 +9,16 @@ Author URI: http://ishan.co
 License: GPL2
 */
 
+$unbounce_analytics_id = get_option('unbounce_analytics_id');
+$unbounce_analytics_input_id = '';
+
 function unbounce_tracking_code()
 {
+	global $unbounce_analytics_id;
 	$tracking_script = <<<_TRACKING_CODE_
 	<script type="text/javascript">
 	var _gaq = _gaq || [];
-	_gaq.push(['_setAccount', 'UA-XXXXXXX-1']);
+	_gaq.push(['_setAccount', '$unbounce_analytics_id']);
 	_gaq.push(['_trackPageview']);
 
 	setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])", 15000);
@@ -28,7 +32,7 @@ function unbounce_tracking_code()
 	</script>
 _TRACKING_CODE_;
 
-	if (is_admin())
+	if (!is_admin())
 	{
 		echo $tracking_script;
 	}
@@ -53,6 +57,7 @@ function unbounce_admin_menu()
 
 function unbounce_options()
 {
+	global $unbounce_analytics_id;
 	if ( !current_user_can( 'manage_options' ) )
 	{
 		wp_die( __('You do not have sufficient permissions to access this page.') );
@@ -61,6 +66,7 @@ function unbounce_options()
 	if (array_key_exists('unbounce_submit', $_POST))
 	{
 		$unbounce_message = unbounce_check_analytics_key();
+		store_unbounce_analytics_key();
 	}
 	echo <<<_UNBOUNCE_OPTIONS_
 	<div id="wrap">
@@ -69,7 +75,7 @@ function unbounce_options()
 		<hr />
 		<form action="options-general.php?page=analytics-unbounce" method="post">
 			<label for="analytics_id">Enter Your Google Analytics ID</label> <br />
-			<input type="text" name="analytics_id" placeholder="Enter Your Analytics ID Here" /> <br />
+			<input type="text" name="analytics_id" value="$unbounce_analytics_id"/> <br />
 			<input type="submit" value="Save" /> <hr />
 			<input type="hidden" name="unbounce_submit" />
 		</form>
@@ -81,16 +87,40 @@ function unbounce_check_analytics_key()
 {
 	if (array_key_exists('analytics_id', $_POST))
 	{
-		$unbounce_analytics_id = sanitize_text_field($_POST['analytics_id']);
-		$unbounce_input_length = strlen($unbounce_analytics_id);
-		if ($unbounce_input_length < 6 || $unbounce_input_length > 13) 
+		global $unbounce_analytics_input_id;
+		$unbounce_analytics_local_id = sanitize_text_field($_POST['analytics_id']);
+		$unbounce_input_length = strlen($unbounce_analytics_local_id);
+		if ($unbounce_input_length < 9 || $unbounce_input_length > 15) 
 		{
-			return '<div class="updated settings-error">You Have Entered Wrong Analytics ID</div>';
+			return '<div class="updated settings-error">This seems like wrong Analytics ID. Please enter a valid one.</div>';
 		}
 		else
 		{
+			$unbounce_analytics_input_id = $unbounce_analytics_local_id;
 			return '<div class="updated settings-error">Analytics ID saved</div>';
 		}
 	}
 }
+?>
+
+<?php
+/* This is some scary databse stuff!*/
+function unbounce_activate()
+{
+	add_option('unbounce_analytics_id');
+}
+
+function store_unbounce_analytics_key()
+	{
+		global $unbounce_analytics_input_id;
+		if ($unbounce_analytics_input_id != '')
+		{
+			update_option('unbounce_analytics_id', $unbounce_analytics_input_id);
+		}
+	}
+?>
+
+<?php
+/* Some work to be done on activation*/
+	register_activation_hook(__FILE__ , 'unbounce_activate');
 ?>
