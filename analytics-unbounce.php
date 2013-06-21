@@ -119,7 +119,7 @@ function store_unbounce_analytics_key()
 	{
 		global $unbounce_analytics_input_id;
 		global $unbounce_analytics_id;
-		if ($unbounce_analytics_input_id != $unbounce_anlytics_id)
+		if ($unbounce_analytics_input_id != $unbounce_analytics_id)
 		{
 			$unbounce_analytics_id = $unbounce_analytics_input_id;
 			update_option('unbounce_analytics_id', $unbounce_analytics_input_id);
