@@ -3,14 +3,13 @@
 Plugin Name: Analytics Unbounce
 Plugin URI: http://wpblogexperts.com/plugins
 Description: Adds Google Analytics tracking code to WordPress and fixes bounce rate measurement
-Version: 1.0
+Version: 2.0
 Author: Ishan Sharma
 Author URI: http://ishan.co
 License: GPL2
 */
 
-/* Check if there is a stored Analytics ID in databsae.*/
-if (!get_option('unbounce_analytics_id'))
+if (!get_option('unbounce_analytics_id')) // Check for Analytics ID in DB
 {
 	add_option('unbounce_analytics_id'); // If key is not there, a blank value is created.
 }
@@ -30,7 +29,12 @@ function unbounce_tracking_code()
 	_gaq.push(['_setAccount', '$unbounce_analytics_id']);
 	_gaq.push(['_trackPageview']);
 
-	setTimeout("_gaq.push(['_trackEvent', '15_seconds', 'read'])", 15000);
+	setTimeout(function() {
+    window.onscroll = function() {
+      window.onscroll = null; // Only track the event once
+      _gaq.push(['_trackEvent', 'scroll', 'read']);
+    }
+	}, 30000);
 
 	(function() {
 		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
