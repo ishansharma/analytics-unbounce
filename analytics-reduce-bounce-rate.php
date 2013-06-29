@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Analytics Unbounce
+Plugin Name: Analytics Reduce Bounce Rate
 Plugin URI: http://wpblogexperts.com/plugins
 Description: Adds Google Analytics tracking code to WordPress and fixes bounce rate measurement
-Version: 2.0
+Version: 2.2
 Author: Ishan Sharma
 Author URI: http://ishan.co
 License: GPL2
@@ -34,7 +34,7 @@ function unbounce_tracking_code()
       window.onscroll = null; // Only track the event once
       _gaq.push(['_trackEvent', 'scroll', 'read']);
     }
-	}, 30000);
+	}, 5000);
 
 	(function() {
 		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
@@ -62,7 +62,7 @@ add_action ('admin_menu', 'unbounce_admin_menu');
 
 function unbounce_admin_menu()
 {
-	add_options_page( 'Analytics Unbounce', 'Analytics Unbounce', 'manage_options', 'analytics-unbounce', 'unbounce_options');
+	add_options_page( 'Analytics Code', 'Analytics Code', 'manage_options', 'analytics-unbounce', 'unbounce_options');
 }
 
 function unbounce_options()
@@ -79,7 +79,7 @@ function unbounce_options()
 	}
 	echo <<<_UNBOUNCE_OPTIONS_
 	<div id="wrap">
-		<h2>Analytics Unbounce Settings</h2> 
+		<h2>Analytics Code Settings</h2> 
 		$unbounce_message
 		<hr />
 		<form action="options-general.php?page=analytics-unbounce" method="post">
